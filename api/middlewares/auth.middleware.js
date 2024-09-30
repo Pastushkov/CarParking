@@ -14,7 +14,7 @@ const authMiddleware = (async = (req, res, next) => {
 
   const token = authHeader.split(" ")[1];
   jwt.verify(token, jwtSecret, (err, user) => {
-    if (err)
+    if (err) {
       return res.status(403).json({
         status: false,
         payload: null,
@@ -22,6 +22,7 @@ const authMiddleware = (async = (req, res, next) => {
           message: "You don't have access for this",
         },
       });
+    }
     req.user = user;
     next();
   });

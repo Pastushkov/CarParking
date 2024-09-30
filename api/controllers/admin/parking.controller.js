@@ -107,9 +107,39 @@ const update = async (req, res) => {
   });
 };
 
+const getById = async (req, res) => {
+  const { _id } = req.params;
+
+  let parking;
+  try {
+    parking = await Parking.findOne({
+      _id,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      message: "Error while get parking",
+      error,
+    });
+  }
+
+  if (!parking) {
+    return res.status(404).json({
+      ok: false,
+      message: "parking not found",
+    });
+  }
+
+  return res.status(200).json({
+    ok: true,
+    payload: parking,
+  });
+};
+
 module.exports = {
   create,
   list,
   deleteParking,
   update,
+  getById,
 };

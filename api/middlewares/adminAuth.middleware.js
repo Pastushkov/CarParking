@@ -14,11 +14,12 @@ const adminAuthMiddleware = (async = (req, res, next) => {
 
   const token = authHeader.split(" ")[1];
   jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err)
+    if (err || user.role !== "admin") {
       return res.status(403).json({
         ok: false,
         message: "You don't have access for this",
       });
+    }
     req.user = user;
     next();
   });

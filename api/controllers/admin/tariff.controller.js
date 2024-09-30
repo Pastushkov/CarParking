@@ -130,9 +130,39 @@ const update = async (req, res) => {
   });
 };
 
+const getById = async (req, res) => {
+  const { _id } = req.params;
+
+  let tariff;
+  try {
+    tariff = await Tariff.findOne({
+      _id,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      message: "Error while get tariff",
+      error,
+    });
+  }
+
+  if (!tariff) {
+    return res.status(404).json({
+      ok: false,
+      message: "tariff not found",
+    });
+  }
+
+  return res.status(200).json({
+    ok: true,
+    payload: tariff,
+  });
+};
+
 module.exports = {
   create,
   list,
   deleteTariff,
   update,
+  getById,
 };

@@ -1,9 +1,10 @@
 const router = require("express")();
 const parkingController = require("../../../controllers/admin/parking.controller");
 
-router.post("/", parkingController.create);
 router.get("/", parkingController.list);
-router.delete("/:_id", parkingController.deleteParking);
+router.post("/", parkingController.create);
+router.get('/:_id', parkingController.getById)
 router.patch("/:_id", parkingController.update);
+router.delete("/:_id", parkingController.deleteParking);
 
 module.exports = router;
