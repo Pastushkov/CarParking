@@ -4,56 +4,47 @@ import { TDataCell } from '../../components/Table/TDataCell';
 import { THead } from '../../components/Table/THead';
 import { THeadCell } from '../../components/Table/THeadCell';
 import '../../generalStyles.css';
-import { useParkings } from '../../queries/useParkings';
+import { useTariffs } from '../../queries/useTariffs';
 import { cn } from '../../services/cn';
-import { Parking } from '../../types';
+import { Tariff } from '../../types';
 
-const columnHelper = createColumnHelper<Parking>();
+const columnHelper = createColumnHelper<Tariff>();
 const columns = [
-  columnHelper.accessor('address', {
-    id: 'address',
-    header: () => <div>Address</div>,
+  columnHelper.accessor('name', {
+    id: 'name',
+    header: () => <div>Name</div>,
     cell: ({ getValue }) => {
       return <div>{getValue()}</div>;
     },
     enableSorting: false,
   }),
-  columnHelper.accessor('size', {
-    id: 'size',
-    header: () => <div>Total places</div>,
+  columnHelper.accessor('pricePerHour', {
+    id: 'pricePerHour',
+    header: () => <div>Price per hour</div>,
     cell: ({ getValue }) => {
       return <div>{getValue()}</div>;
     },
     enableSorting: false,
   }),
-  columnHelper.accessor('occupied', {
-    id: 'occupied',
-    header: () => <div>Occupied places</div>,
+  columnHelper.accessor('startWorkingHours', {
+    id: 'startWorkingHours',
+    header: () => <div>Start working hours</div>,
     cell: ({ getValue }) => {
       return <div>{getValue()}</div>;
     },
     enableSorting: false,
   }),
-  columnHelper.display({
-    id: 'freePlaces',
-    header: () => <div>Free places</div>,
-    cell: ({ row }) => {
-      const value = row.original.size - row.original.occupied;
-      return <div>{value}</div>;
-    },
-    enableSorting: false,
-  }),
-  columnHelper.accessor('floorCount', {
-    id: 'floorCount',
-    header: () => <div>Floor count</div>,
+  columnHelper.accessor('endWorkingHours', {
+    id: 'endWorkingHours',
+    header: () => <div>End working hours</div>,
     cell: ({ getValue }) => {
       return <div>{getValue()}</div>;
     },
     enableSorting: false,
   }),
-  columnHelper.accessor('tariffId.name', {
-    id: 'tariffName',
-    header: () => <div>Tariff name</div>,
+  columnHelper.accessor('freeTime', {
+    id: 'freeTime',
+    header: () => <div>Free time</div>,
     cell: ({ getValue }) => {
       return <div>{getValue()}</div>;
     },
@@ -73,10 +64,10 @@ const columns = [
   }),
 ];
 
-export const Parkings = () => {
-  const { data } = useParkings();
+export const Tariffs = () => {
+  const { data } = useTariffs();
 
-  const [tableData, setTableData] = useState<Parking[]>([]);
+  const [tableData, setTableData] = useState<Tariff[]>([]);
 
   useEffect(() => {
     if (data) {

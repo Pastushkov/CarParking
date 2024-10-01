@@ -1,0 +1,28 @@
+.row:hover td {
+  background-color: #f2fafd;
+}
+
+.row:hover td a {
+  background-color: #f2fafd;
+  color: #0099da;
+}
+
+.row:hover td div {
+  background-color: #f2fafd;
+}
+
+.row:hover td div .icon {
+  background-color: #565353;
+}
+
+.row:hover td .icon {
+  background-color: #0099da;
+}
+
+.row:hover td div .react-tooltip {
+  background-color: black;
+}
+
+.row:hover td div .react-tooltip-arrow {
+  background-color: black;
+}

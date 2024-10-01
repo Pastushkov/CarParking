@@ -33,10 +33,10 @@ export const LoginPage = () => {
   const submit = async (values: { phone: string; password: string }) => {
     setIsLoading(true);
     try {
-      const res = await authenticate(values);
+      await authenticate(values);
       setIsLoading(false);
       navigate({
-        to: '/parkings',
+        to: '/panel/parkings',
       });
     } catch (error) {
       setIsLoading(false);

@@ -23,7 +23,9 @@ const list = async (req, res) => {
   let parkings;
 
   try {
-    parkings = await Parking.find({}, {}, { skip: offset, limit });
+    parkings = await Parking.find({}, {}, { skip: offset, limit }).populate(
+      "tariffId"
+    );
   } catch (error) {
     return res.status(500).json({
       ok: false,

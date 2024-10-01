@@ -1,6 +1,8 @@
 import { MakeGenerics, Navigate, ReactLocation, Route } from '@tanstack/react-location';
+import { AdminLayout } from './components/Layout/AdminLayout';
 import { LoginPage } from './pages/LoginPage/LoginPage';
 import { Parkings } from './pages/Parkings/Parkings';
+import { Tariffs } from './pages/Tariffs/Tariffs';
 import { AuthenticationState } from './services/authService';
 
 export type LocationGenerics = MakeGenerics<{
@@ -32,7 +34,17 @@ export const routes: Route<LocationGenerics>[] = [
     element: <LoginPage />,
   },
   {
-    path: 'parkings',
-    element: <Parkings />,
+    path: '/panel',
+    element: <AdminLayout />,
+    children: [
+      {
+        path: '/parkings',
+        element: <Parkings />,
+      },
+      {
+        path: '/tariffs',
+        element: <Tariffs />,
+      },
+    ],
   },
 ];
