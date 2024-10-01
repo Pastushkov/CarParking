@@ -17,7 +17,7 @@ const login = async (req, res) => {
   let candiate = null;
 
   try {
-    candiate = await Admin.findOne({ phone });
+    candiate = await Admin.findOne({ phone }).select("password");
   } catch (error) {
     return res.status(400).json({
       message: "Incorect credentials",
@@ -83,7 +83,6 @@ const register = async (req, res) => {
       error,
     });
   }
-
 
   return res.status(200).json({
     ok: true,
