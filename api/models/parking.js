@@ -25,6 +25,10 @@ const ParkingSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  possition: {
+    lat: { type: Number, required: true },
+    lng: { type: Number, required: true },
+  },
 });
 
 module.exports = mongoose.model("Parking", ParkingSchema);

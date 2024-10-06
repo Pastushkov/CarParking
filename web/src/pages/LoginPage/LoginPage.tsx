@@ -5,11 +5,13 @@ import { Controller, useForm } from 'react-hook-form';
 import { PrimaryButton } from '../../components/Button/PrimaryButton';
 import { Input } from '../../components/Input/Input';
 import { loginSchema } from '../../schemas/schemas';
-import { authenticate } from '../../services/authService';
+import { AuthenticationState, authenticate } from '../../services/authService';
+import { cn } from '../../services/cn';
 import splashImage from './assets/splash.png';
 
 export const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -33,11 +35,18 @@ export const LoginPage = () => {
   const submit = async (values: { phone: string; password: string }) => {
     setIsLoading(true);
     try {
-      await authenticate(values);
+      const res = await authenticate(values);
+      switch (res) {
+        case AuthenticationState.Authenticated:
+          navigate({
+            to: '/panel/parkings',
+          });
+          break;
+        case AuthenticationState.Unauthorized:
+          setError('Invalid credentials');
+          break;
+      }
       setIsLoading(false);
-      navigate({
-        to: '/panel/parkings',
-      });
     } catch (error) {
       setIsLoading(false);
     }
@@ -60,8 +69,11 @@ export const LoginPage = () => {
                     value={field.value}
                     onChange={field.onChange}
                     autoFocus
-                    tabIndex={1}
+                    tabIndex={0}
                     placeholder="380123456789"
+                    className={cn({
+                      'border-red-40 focus:border-red-40': errors.phone || error,
+                    })}
                   />
                 )}
               />
@@ -75,7 +87,16 @@ export const LoginPage = () => {
                 control={control}
                 name="password"
                 render={({ field }) => (
-                  <Input type="password" value={field.value} onChange={field.onChange} autoFocus tabIndex={1} />
+                  <Input
+                    className={cn({
+                      'border-red-40 focus:border-red-40': errors.password || error,
+                    })}
+                    type="password"
+                    value={field.value}
+                    onChange={field.onChange}
+                    autoFocus
+                    tabIndex={0}
+                  />
                 )}
               />
               <div className="h-5">
@@ -83,7 +104,8 @@ export const LoginPage = () => {
               </div>
             </div>
           </div>
-          <div className="m-5 flex justify-center">
+          <div className="m-5 flex flex-col items-center justify-center gap-2">
+            {error && <div className=" mt-1 text-sm text-error-500">{error}</div>}
             <PrimaryButton
               loading={isLoading}
               disabled={isLoading}

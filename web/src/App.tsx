@@ -5,12 +5,6 @@ import { location, routes } from './routes';
 
 export const queryClient = new QueryClient();
 
-export const tabs = [
-  { name: 'Parkings', path: 'parkings' },
-  { name: 'Tariffs', path: 'tariffs' },
-  { name: 'Admins', path: 'admins' },
-];
-
 function App() {
   return (
     <QueryClientProvider client={queryClient}>

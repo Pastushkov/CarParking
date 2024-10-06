@@ -5,6 +5,7 @@ import { Tariff } from '../types';
 export function useTariffs() {
   const queryResult = useQuery<Tariff[]>({
     refetchOnWindowFocus: false,
+    initialData: [],
     queryKey: ['tariffs'],
     queryFn: () => TariffService.fetchTariffs(),
   });

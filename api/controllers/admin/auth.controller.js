@@ -19,22 +19,24 @@ const login = async (req, res) => {
   try {
     candiate = await Admin.findOne({ phone }).select("password");
   } catch (error) {
-    return res.status(400).json({
-      message: "Incorect credentials",
+    return res.status(500).json({
+      ok: false,
+      message: "Error during login",
+      error,
     });
   }
 
   if (!candiate) {
-    return res.status(400).json({
-      message: "Incorect credentials",
+    return res.status(401).json({
+      message: "Invalid credentials",
     });
   }
 
   let isSame = await bcrypt.compare(password, candiate.password);
 
   if (!isSame) {
-    return res.status(400).json({
-      message: "Incorect credentials",
+    return res.status(401).json({
+      message: "Invalid credentials",
     });
   }
 

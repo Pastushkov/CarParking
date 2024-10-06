@@ -1,5 +1,5 @@
 import React from 'react';
-import loader from '../../../assets/icons/loader.svg';
+import loader from '../../../assets/loader.svg';
 import { cn } from '../../../services/cn';
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {

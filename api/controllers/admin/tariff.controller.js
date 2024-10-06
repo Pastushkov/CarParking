@@ -1,4 +1,5 @@
 const Tariff = require("../../models/tariff");
+const Parking = require("../../models/parking");
 
 const create = async (req, res) => {
   const data = req.body;
@@ -63,6 +64,25 @@ const list = async (req, res) => {
 
 const deleteTariff = async (req, res) => {
   const { _id } = req.params;
+
+  let parkings;
+  try {
+    parkings = await Parking.find({ tariffId: _id });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      message: "error while delete tariff",
+      error,
+    });
+  }
+
+  if (parkings && parkings.length > 0) {
+    return res.status(409).json({
+      ok: false,
+      message:
+        "Cannot delete tariff as it is associated with existing parking spots",
+    });
+  }
 
   try {
     await Tariff.deleteOne({ _id });

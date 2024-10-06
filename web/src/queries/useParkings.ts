@@ -5,6 +5,7 @@ import { Parking } from '../types';
 export function useParkings() {
   const queryResult = useQuery<Parking[]>({
     refetchOnWindowFocus: false,
+    initialData: [],
     queryKey: ['parkings'],
     queryFn: () => ParkingService.fetchParkings(),
   });

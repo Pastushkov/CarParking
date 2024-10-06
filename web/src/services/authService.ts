@@ -16,8 +16,13 @@ export const authenticate = async (values: any): Promise<any> => {
     const { data } = await api.post('/auth/login', values);
     saveToken(data.token);
     return AuthenticationState.Authenticated;
-  } catch (e) {
+  } catch (e: any) {
     clearUserData();
+    if (e?.response?.status === 401) {
+      return AuthenticationState.Unauthorized;
+    }
+    console.log();
+
     return AuthenticationState.Error;
   }
 };
