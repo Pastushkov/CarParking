@@ -1,21 +1,25 @@
-import { MMKV } from "react-native-mmkv";
+import storage from "sync-storage";
 
-const storage = new MMKV();
+const initStorage = async () => {
+  const data = await storage.init();
+};
 
 const get = (key: string) => {
   if (!key) {
-    return undefined;
+    return null;
   }
-  const value = storage.getString(key);
 
+  const value = storage.get(key);
   return value;
 };
 
-const set = async (key: string, value: any) => {
+const set = (key: string, value: any) => {
   if (!key || !value) {
     return undefined;
   }
   storage.set(key, JSON.stringify(value));
 };
+
+initStorage();
 
 export default { get, set };

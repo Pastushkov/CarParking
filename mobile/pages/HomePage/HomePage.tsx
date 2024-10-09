@@ -10,6 +10,7 @@ export const HomeScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       <Text>HOME</Text>
+      <Button title="Login" onPress={() => navigation.replace("Login")} />
     </View>
   );
 };
