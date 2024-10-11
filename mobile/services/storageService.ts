@@ -1,7 +1,7 @@
 import storage from "sync-storage";
 
 const initStorage = async () => {
-  const data = await storage.init();
+  await storage.init();
 };
 
 const get = (key: string) => {
@@ -20,6 +20,13 @@ const set = (key: string, value: any) => {
   storage.set(key, JSON.stringify(value));
 };
 
+const remove = (key: string) => {
+  if (!key) {
+    return undefined;
+  }
+  storage.remove(key);
+};
+
 initStorage();
 
-export default { get, set };
+export default { get, set, remove };

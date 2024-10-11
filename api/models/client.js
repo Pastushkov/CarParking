@@ -4,13 +4,14 @@ const ClientSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    default: "User",
   },
   phone: {
     type: String,
     required: true,
     unique: true,
   },
-  password: {
+  pin: {
     type: String,
     required: true,
   },

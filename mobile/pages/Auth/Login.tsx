@@ -2,9 +2,12 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { Button, Text, TextInput, View } from "react-native";
 import storageService from "../../services/storageService";
-import { api } from "../../services/api";
+import {
+  findUser,
+} from "../../services/authService";
+import { useRootState } from "../../state/rootState";
 
 interface Props {
   navigation: StackNavigationProp<any>;
@@ -14,7 +17,9 @@ interface FormInputs {
   phone: string;
 }
 
-export const LoginPage = ({ navigation }: Props) => {
+export const Login = ({ navigation }: Props) => {
+  const { setRootState } = useRootState();
+
   const {
     control,
     handleSubmit,
@@ -22,28 +27,30 @@ export const LoginPage = ({ navigation }: Props) => {
   } = useForm<FormInputs>({
     mode: "onSubmit",
     defaultValues: {
-      phone: "",
+      phone: "380634365682", //TODO remove
     },
   });
-
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const token = storageService.get("token");
     if (token) {
-      navigation.navigate("Home");
+      navigation.replace("Home");
     }
   }, []);
 
-  const submit = (values: FormInputs) => {
+  const [loading, setLoading] = useState(false);
+
+  const submit = async (values: FormInputs) => {
     setLoading(true);
-    const { phone } = values;
-    if (phone) {
-      api.get('/')
-      setTimeout(() => {
-        setLoading(false);
-        navigation.replace("Home");
-      }, 3000);
+    setRootState((state: any) => ({
+      ...state,
+      phone: values.phone,
+    }));
+    const res = await findUser(values);
+    if (res.processLogin) {
+      navigation.navigate("Pin", { createPin: false });
+    } else {
+      navigation.navigate("VerifyPhone");
     }
     setLoading(false);
   };
@@ -61,12 +68,11 @@ export const LoginPage = ({ navigation }: Props) => {
       <Controller
         name="phone"
         control={control}
-        // rules={{
-        //   required: "Phone is required",
-        // }}
+        rules={{
+          required: "Phone is required",
+        }}
         render={({ field }) => (
           <TextInput
-            // {...field}
             placeholder="Phone"
             style={{
               height: 40,
