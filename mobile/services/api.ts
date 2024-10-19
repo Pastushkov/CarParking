@@ -2,6 +2,9 @@ import axios, { AxiosRequestConfig } from "axios";
 import storageService from "./storageService";
 import { API_HOST } from "@env";
 
+console.log(API_HOST);
+
+
 export const api = axios.create({
   baseURL: `${API_HOST}`,
 });
@@ -34,5 +37,9 @@ api.interceptors.request.use(
       },
     };
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    console.log("error here!!");
+
+    return Promise.reject(error);
+  }
 );

@@ -15,6 +15,7 @@ const ACCESS_TOKEN_KEY = "token";
 export const findUser = async (values: any) => {
   try {
     const { data } = await api.post("/auth/find-user", values);
+
     return data.payload;
   } catch (error: any) {
     if (error?.response?.data?.payload?.redirectToRegister) {

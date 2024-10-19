@@ -2,7 +2,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Button, Text, View } from "react-native";
+import { Button, Text, TextInput, View } from "react-native";
 import { verifySms } from "../../services/authService";
 import { useRootState } from "../../state/rootState";
 
@@ -59,7 +59,8 @@ export const VerifyPhone = ({ navigation }: Props) => {
           required: "Code is required",
         }}
         render={({ field }) => (
-          <input
+          <TextInput
+            autoFocus
             placeholder="Code"
             style={{
               height: 40,
@@ -70,8 +71,8 @@ export const VerifyPhone = ({ navigation }: Props) => {
               padding: 5,
             }}
             value={field.value}
-            onChange={field.onChange}
             maxLength={6}
+            onChangeText={field.onChange}
           />
         )}
       />

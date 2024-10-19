@@ -9,6 +9,7 @@ import {
   register,
 } from "../../services/authService";
 import { useRootState } from "../../state/rootState";
+import { TextInput } from "react-native-gesture-handler";
 
 interface Props {
   navigation: StackNavigationProp<any>;
@@ -81,7 +82,8 @@ export const Pin = ({ navigation, route }: Props) => {
           required: "pin is required",
         }}
         render={({ field }) => (
-          <input
+          <TextInput
+            autoFocus
             placeholder="Code"
             style={{
               height: 40,
@@ -92,9 +94,9 @@ export const Pin = ({ navigation, route }: Props) => {
               padding: 5,
             }}
             value={field.value}
-            onChange={field.onChange}
+            onChangeText={field.onChange}
             maxLength={4}
-            type="password"
+            // type="password"
           />
         )}
       />

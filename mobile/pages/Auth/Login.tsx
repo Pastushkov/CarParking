@@ -4,9 +4,7 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Text, TextInput, View } from "react-native";
 import storageService from "../../services/storageService";
-import {
-  findUser,
-} from "../../services/authService";
+import { findUser } from "../../services/authService";
 import { useRootState } from "../../state/rootState";
 
 interface Props {
@@ -73,6 +71,7 @@ export const Login = ({ navigation }: Props) => {
         }}
         render={({ field }) => (
           <TextInput
+            autoFocus
             placeholder="Phone"
             style={{
               height: 40,
