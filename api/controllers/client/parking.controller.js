@@ -2,11 +2,8 @@ const Parkings = require("../../models/parking");
 
 const findNearestParking = async (req, res) => {
   const { longitude, latitude } = req.body;
-  console.log("longitude: ", longitude);
-  console.log("latitude: ", latitude);
 
   if (!longitude || !latitude) {
-    console.log("here222");
     return res
       .status(400)
       .json({ ok: false, message: "Coordinates are required" });
@@ -19,14 +16,18 @@ const findNearestParking = async (req, res) => {
         $near: {
           $geometry: {
             type: "Point",
-            coordinates: [latitude, longitude], //[longitude, latitude],
+            coordinates: [latitude, longitude],
           },
-          $maxDistance: 10000, // Радіус у метрах (10 км)
+          $maxDistance: 10000, // meters (10 km)
         },
       },
-    }).select("position address"); // Повернемо тільки координати і адресу (name)
+    }).select("position address");
   } catch (error) {
-    console.log(error);
+    return res.status(500).json({
+      ok: false,
+      message: "Error while find parking spots",
+      error,
+    });
   }
 
   const result = parkingSpots.map((spot) => ({
