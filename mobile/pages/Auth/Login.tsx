@@ -3,7 +3,9 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Text, TextInput, View } from "react-native";
-import storageService from "../../services/storageService";
+import storageService, {
+  initStorageService,
+} from "../../services/storageService";
 import { findUser } from "../../services/authService";
 import { useRootState } from "../../state/rootState";
 
@@ -17,6 +19,7 @@ interface FormInputs {
 
 export const Login = ({ navigation }: Props) => {
   const { setRootState } = useRootState();
+  const [loading, setLoading] = useState(false);
 
   const {
     control,
@@ -25,21 +28,41 @@ export const Login = ({ navigation }: Props) => {
   } = useForm<FormInputs>({
     mode: "onSubmit",
     defaultValues: {
-      phone: "380634365682", //TODO remove
+      phone: "",
     },
   });
 
-  useEffect(() => {
-    const token = storageService.get("token");
-    if (token) {
-      navigation.replace("Home");
-    }
-  }, []);
+  const findToken = (arr: any[]): boolean => {
+    for (let i = 0; i < arr.length; i++) {
+      const item = arr[i];
 
-  const [loading, setLoading] = useState(false);
+      if (!Array.isArray(item)) {
+        return false;
+      }
+
+      if (item[0] === "token") {
+        return true;
+      }
+      const nestedResult = findToken(item);
+      if (nestedResult) {
+        return nestedResult;
+      }
+    }
+
+    return false;
+  };
+
+  useEffect(() => {
+    initStorageService().then((res) => {
+      if (findToken(res)) {
+        navigation.replace("Home");
+      }
+    });
+  }, []);
 
   const submit = async (values: FormInputs) => {
     setLoading(true);
+
     setRootState((state: any) => ({
       ...state,
       phone: values.phone,

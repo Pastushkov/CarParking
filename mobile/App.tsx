@@ -8,7 +8,7 @@ import React, { useEffect, useLayoutEffect } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { Login } from "./pages/Auth/Login";
 import { Home } from "./pages/Home/Home";
-import storageService from "./services/storageService";
+import { initStorageService } from "./services/storageService";
 import { VerifyPhone } from "./pages/Auth/VerifyPhone";
 import { RootStateProvier } from "./state/rootState";
 import { Pin } from "./pages/Auth/Pin";

@@ -20,7 +20,7 @@ export const EditParking = () => {
   const { id } = useRouteParams();
   const navigate = useNavigate();
 
-  const [possition, setPossition] = useState<{ lat: number; lng: number } | null>(null);
+  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
   const [parking, setParking] = useState<Parking | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,7 +28,10 @@ export const EditParking = () => {
     try {
       const data = await ParkingService.fetchParkingById(id);
       setParking(data);
-      setPossition(data.possition);
+      setPosition({
+        lat: data.position.coordinates[0],
+        lng: data.position.coordinates[1],
+      });
     } catch (error) {
       console.log(error);
       navigate({ to: '/panel/parkings' });
@@ -69,7 +72,12 @@ export const EditParking = () => {
   const submit = async (values: any) => {
     setIsLoading(true);
     try {
-      await ParkingService.updateParking(id, { ...values, possition });
+      await ParkingService.updateParking(id, {
+        ...values,
+        position: {
+          coordinates: [position?.lat, position?.lng],
+        },
+      });
       setBoundary('Parking updated!', 'success');
     } catch (error: any) {
       setBoundary(error?.response?.data?.message ?? 'Server error. Try again later.');
@@ -117,7 +125,7 @@ export const EditParking = () => {
                     value={field.value ?? undefined}
                     onChange={(e) => {
                       field.onChange(e);
-                      setPossition(null);
+                      setPosition(null);
                     }}
                     disabled
                   />
@@ -211,8 +219,8 @@ export const EditParking = () => {
             setAddress={(address) => {
               setValue('address', address);
             }}
-            possition={possition}
-            setPossition={setPossition}
+            position={position}
+            setPosition={setPosition}
           />
         </div>
       </div>

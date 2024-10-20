@@ -19,24 +19,24 @@ L.Icon.Default.mergeOptions({
 
 interface Props {
   setAddress: (value: string) => void;
-  possition: { lat: number; lng: number } | null;
-  setPossition: (value: { lat: number; lng: number } | null) => void;
+  position: { lat: number; lng: number } | null;
+  setPosition: (value: { lat: number; lng: number } | null) => void;
   className?: string;
 }
 
-export const Map = ({ setAddress, possition, setPossition, className }: Props) => {
+export const Map = ({ setAddress, position, setPosition, className }: Props) => {
   const center: LatLngExpression = useMemo(() => {
-    if (possition) {
-      return [possition.lat, possition.lng];
+    if (position) {
+      return [position.lat, position.lng];
     }
     return [50.4501, 30.5234];
-  }, [possition]);
+  }, [position]);
 
   const MapClickHandler = () => {
     useMapEvents({
       async click(e) {
         const { lat, lng } = e.latlng;
-        setPossition({ lat, lng });
+        setPosition({ lat, lng });
 
         try {
           const response = await fromLatLng(lat, lng);
@@ -53,13 +53,13 @@ export const Map = ({ setAddress, possition, setPossition, className }: Props) =
 
   return (
     <div>
-      <MapContainer center={center} zoom={possition ? 13 : 6} className={cn('h-[85vh] w-full', className)}>
+      <MapContainer center={center} zoom={position ? 13 : 6} className={cn('h-[85vh] w-full', className)}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
         />
         <MapClickHandler />
-        {possition && <Marker position={possition} />}
+        {position && <Marker position={position} />}
       </MapContainer>
     </div>
   );

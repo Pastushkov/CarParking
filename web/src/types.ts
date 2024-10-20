@@ -7,9 +7,10 @@ export interface Parking {
   occupied: number;
   tariffId: Tariff;
   floorCount: number;
-  possition: {
-    lat: number;
-    lng: number;
+  position: {
+    coordinates: number[];
+    // lat: number;
+    // lng: number;
   };
 }
 

@@ -2,9 +2,6 @@ import axios, { AxiosRequestConfig } from "axios";
 import storageService from "./storageService";
 import { API_HOST } from "@env";
 
-console.log(API_HOST);
-
-
 export const api = axios.create({
   baseURL: `${API_HOST}`,
 });
@@ -23,17 +20,20 @@ function enrichHeadersWithContentType(config: AxiosRequestConfig): any {
 
 api.interceptors.request.use(
   (config) => {
-    const token = storageService.get("token");
+    const token: string = storageService.get("token");
 
     if (!token) {
       return config;
     }
+
+    const formattedToken = token.replace(/^"|"$/g, "");
     const headers = enrichHeadersWithContentType(config);
+
     return {
       ...config,
       headers: {
         ...headers,
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${formattedToken}`,
       },
     };
   },

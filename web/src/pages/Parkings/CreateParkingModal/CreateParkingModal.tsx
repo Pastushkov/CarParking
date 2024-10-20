@@ -22,7 +22,7 @@ interface Props {
 export const CreateParkingModal = ({ isOpened, onBackdropClick, onSubmit }: Props) => {
   const { data: tariffs } = useTariffs();
 
-  const [possition, setPossition] = useState<{ lat: number; lng: number } | null>(null);
+  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const tariffSelectOptions: Option[] = tariffs?.map(({ name, _id }) => ({
@@ -49,7 +49,9 @@ export const CreateParkingModal = ({ isOpened, onBackdropClick, onSubmit }: Prop
 
   const submit = (values: any) => {
     setIsLoading(true);
-    onSubmit({ ...values, possition }).then(() => {
+    onSubmit({ ...values, position: {
+      coordinates: [position?.lat,position?.lng]
+    } }).then(() => {
       onBackdropClick();
       reset();
     });
@@ -154,8 +156,8 @@ export const CreateParkingModal = ({ isOpened, onBackdropClick, onSubmit }: Prop
         <div className="w-2/3">
           <Map
             className="h-[72vh]"
-            possition={possition}
-            setPossition={setPossition}
+            position={position}
+            setPosition={setPosition}
             setAddress={(address) => setValue('address', address)}
           />
         </div>

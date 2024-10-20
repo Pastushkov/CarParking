@@ -25,10 +25,22 @@ const ParkingSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  possition: {
-    lat: { type: Number, required: true },
-    lng: { type: Number, required: true },
+  position: {
+    type: {
+      type: String,
+      enum: ["Point"], // Тип має бути 'Point'
+      default: "Point",
+    },
+    coordinates: {
+      // Для зберігання геопозицій
+      type: [Number], // Масив з довготи та широти
+      required: true,
+    },
   },
+  // position: {
+  //   lat: { type: Number, required: true },
+  //   lng: { type: Number, required: true },
+  // },
 });
-
+ParkingSchema.index({ position: '2dsphere' });
 module.exports = mongoose.model("Parking", ParkingSchema);

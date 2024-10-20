@@ -1,7 +1,7 @@
 import storage from "sync-storage";
 
-const initStorage = async () => {
-  await storage.init();
+export const initStorageService = async () => {
+  return await storage.init();
 };
 
 const get = (key: string) => {
@@ -26,7 +26,5 @@ const remove = (key: string) => {
   }
   storage.remove(key);
 };
-
-initStorage();
 
 export default { get, set, remove };

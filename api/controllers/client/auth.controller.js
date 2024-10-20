@@ -9,7 +9,7 @@ const generateAccessToken = (candidate) => {
     id: candidate.id,
     role: "client",
   };
-  return jwt.sign(payload, CLIENT_JWT_SECRET);
+  return jwt.sign(payload, CLIENT_JWT_SECRET, { expiresIn: "100d" });
 };
 
 const login = async (req, res) => {
@@ -176,5 +176,5 @@ module.exports = {
   register,
   sendSms,
   verifySms,
-  findUser
+  findUser,
 };
