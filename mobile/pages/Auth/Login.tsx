@@ -65,7 +65,9 @@ export const Login = ({ navigation }: Props) => {
 
     setRootState((state: any) => ({
       ...state,
-      phone: values.phone,
+      auth: {
+        phone: values.phone,
+      },
     }));
     const res = await findUser(values);
     if (res.processLogin) {
@@ -94,6 +96,7 @@ export const Login = ({ navigation }: Props) => {
         }}
         render={({ field }) => (
           <TextInput
+            keyboardType="numeric"
             autoFocus
             placeholder="Phone"
             style={{

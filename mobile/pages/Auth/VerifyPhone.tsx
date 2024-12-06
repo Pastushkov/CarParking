@@ -32,11 +32,9 @@ export const VerifyPhone = ({ navigation }: Props) => {
 
   const submit = async (values: FormInputs) => {
     setLoading(true);
-    const res = await verifySms({ ...values, phone: rootState.phone });
+    const res = await verifySms({ ...values, ...rootState.auth });
     if (res) {
-      navigation.replace("Pin", {
-        createPin: true,
-      });
+      navigation.replace("AdditionalInfo");
     }
     setLoading(false);
   };
@@ -60,6 +58,7 @@ export const VerifyPhone = ({ navigation }: Props) => {
         }}
         render={({ field }) => (
           <TextInput
+            keyboardType="number-pad"
             autoFocus
             placeholder="Code"
             style={{

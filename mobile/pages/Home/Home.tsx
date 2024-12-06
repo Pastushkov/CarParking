@@ -1,41 +1,92 @@
-import { StackNavigationProp } from "@react-navigation/stack";
-import React from "react";
-import { StyleSheet } from "react-native";
+import {
+  StackNavigationProp,
+  createStackNavigator,
+} from "@react-navigation/stack";
+import React, { useEffect, useState } from "react";
+import { Image } from "react-native";
 import { Map } from "../Map/Map";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Profile } from "../Profile/Profile";
+import { Loader } from "../../components/Loader";
+import { useRootState } from "../../state/rootState";
+import { clearUserData } from "../../services/authService";
+import { Cars } from "../Cars/Cars";
 
 interface Props {
   navigation: StackNavigationProp<any>;
 }
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-export const Home = ({ navigation }: Props) => {
+const Tabs = () => {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Map" component={Map} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen
+        name="Map"
+        component={Map}
+        options={{
+          tabBarIcon: ({ size }) => (
+            <Image
+              style={{
+                width: size,
+                height: size,
+              }}
+              source={require("../../assets/icons/map.png")}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarIcon: ({ size }) => (
+            <Image
+              style={{
+                width: size,
+                height: size,
+              }}
+              source={require("../../assets/icons/profile.png")}
+            />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  navigationMenu: {
-    width: "100%",
-    height: 30,
-    gap: 10,
-    backgroundColor: "#0099da",
-    bottom: 0,
-    position: "absolute",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 5,
-  },
-});
+export const Home = ({ navigation }: Props) => {
+  const [loading, setLoading] = useState(false);
+  const { rootState } = useRootState();
+  const fetchClient = async () => {
+    try {
+      await rootState.fetchMe();
+    } catch (error) {
+      console.log(error);
+      clearUserData();
+      navigation.replace("Login");
+    }
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    fetchClient();
+    setLoading(false);
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Tabs"
+        component={Tabs}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="Cars" component={Cars} />
+    </Stack.Navigator>
+  );
+};

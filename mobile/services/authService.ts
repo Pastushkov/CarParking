@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { api } from "./api";
 import storageService from "./storageService";
 
@@ -41,7 +42,6 @@ export const authenticate = async (values: any) => {
 export const sendSms = async (values: any) => {
   try {
     const { data } = await api.post("/auth/send-sms", values);
-    console.log(data);
     return data;
   } catch (error) {
     console.log(error);
@@ -52,10 +52,9 @@ export const sendSms = async (values: any) => {
 export const verifySms = async (values: any) => {
   try {
     const { data } = await api.post("/auth/verify-sms", values);
-    console.log(data);
     return data.ok;
-  } catch (error) {
-    console.log(error);
+  } catch (error) {    
+    console.log(JSON.stringify(error));
     return undefined;
   }
 };
@@ -63,7 +62,6 @@ export const verifySms = async (values: any) => {
 export const register = async (values: any) => {
   try {
     const { data } = await api.post("/auth/register", values);
-    console.log(data);
     return data.ok;
   } catch (error) {
     console.log(error);

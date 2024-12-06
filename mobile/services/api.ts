@@ -21,7 +21,7 @@ function enrichHeadersWithContentType(config: AxiosRequestConfig): any {
 api.interceptors.request.use(
   (config) => {
     const token: string = storageService.get("token");
-
+        
     if (!token) {
       return config;
     }
@@ -38,8 +38,6 @@ api.interceptors.request.use(
     };
   },
   (error) => {
-    console.log("error here!!");
-
     return Promise.reject(error);
   }
 );

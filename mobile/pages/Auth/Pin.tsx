@@ -43,7 +43,7 @@ export const Pin = ({ navigation, route }: Props) => {
     if (createPin) {
       const success = await register({
         ...values,
-        phone: rootState.phone,
+        ...rootState.auth,
       });
       if (success) {
         reset({
@@ -54,7 +54,7 @@ export const Pin = ({ navigation, route }: Props) => {
     } else {
       const res = await authenticate({
         ...values,
-        phone: rootState.phone,
+        ...rootState.auth,
       });
       switch (res) {
         case AuthenticationState.Authenticated:
@@ -96,7 +96,7 @@ export const Pin = ({ navigation, route }: Props) => {
             value={field.value}
             onChangeText={field.onChange}
             maxLength={4}
-            // type="password"
+            keyboardType="numeric"
           />
         )}
       />

@@ -1,17 +1,12 @@
 import { NavigationContainer } from "@react-navigation/native";
-import {
-  StackNavigationProp,
-  createStackNavigator,
-} from "@react-navigation/stack";
-import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useLayoutEffect } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
+import React from "react";
 import { Login } from "./pages/Auth/Login";
 import { Home } from "./pages/Home/Home";
-import { initStorageService } from "./services/storageService";
 import { VerifyPhone } from "./pages/Auth/VerifyPhone";
 import { RootStateProvier } from "./state/rootState";
 import { Pin } from "./pages/Auth/Pin";
+import { AdditionInfo } from "./pages/Auth/Additionalnfo";
 
 const Stack = createStackNavigator();
 
@@ -27,6 +22,7 @@ export default function App() {
           />
           <Stack.Screen name="VerifyPhone" component={VerifyPhone} />
           <Stack.Screen name="Pin" component={Pin} />
+          <Stack.Screen name="AdditionalInfo" component={AdditionInfo} />
           <Stack.Screen
             name="Home"
             component={Home}

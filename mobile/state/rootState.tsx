@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
+import { Client } from "../types";
+import { ProfileService } from "../services/profileService";
 
 interface RootStateCtx {
   rootState: any;
@@ -12,7 +14,18 @@ interface Props {
 const RootStateContext = createContext<RootStateCtx | null>(null);
 
 export const RootStateProvier = ({ children }: Props) => {
-  const [rootState, setRootState] = useState(null);
+  const [rootState, setRootState] = useState({
+    fetchMe: async () => {
+      try {
+        const { client, parkingSession } = await ProfileService.fetchMe();
+        setRootState((state) => ({
+          ...state,
+          client,
+          parkingSession,
+        }));
+      } catch (error) {}
+    },
+  });
 
   return (
     <RootStateContext.Provider
