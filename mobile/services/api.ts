@@ -1,6 +1,8 @@
 import axios, { AxiosRequestConfig } from "axios";
 import storageService from "./storageService";
-import { API_HOST } from "@env";
+// import { API_HOST } from "@env";
+const API_HOST = "http://192.168.8.3:5000/v1/client";
+console.log(API_HOST);
 
 export const api = axios.create({
   baseURL: `${API_HOST}`,
@@ -21,7 +23,7 @@ function enrichHeadersWithContentType(config: AxiosRequestConfig): any {
 api.interceptors.request.use(
   (config) => {
     const token: string = storageService.get("token");
-        
+
     if (!token) {
       return config;
     }

@@ -10,4 +10,5 @@ module.exports = {
   TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
   INFOBIP_API_KEY: process.env.INFOBIP_API_KEY,
   INFOBIP_URL: process.env.INFOBIP_URL,
+  STOPPER_ACCESS_TOKEN: process.env.STOPPER_ACCESS_TOKEN,
 };
