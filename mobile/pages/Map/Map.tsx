@@ -136,7 +136,15 @@ export const Map = ({ navigation }: Props) => {
   };
 
   const handleBookPlace = async () => {
-    console.log(spotDetail);
+    try {
+      await ParkingService.bookPlace({
+        parkingId: spotDetail._id,
+        carId: selectedCarId,
+      });
+      await rootState.fetchMe();
+    } catch (error) {
+      console.log(JSON.stringify(error));
+    }
   };
 
   return (
@@ -231,13 +239,23 @@ export const Map = ({ navigation }: Props) => {
                 padding: 20,
               }}
             >
-              <Button title="Book place" onPress={() => handleBookPlace()} />
+              <View
+                style={{
+                  marginBottom: 24,
+                }}
+              >
+                <Button title="Book place" onPress={() => handleBookPlace()} />
+              </View>
               <Button
                 title="Park"
                 disabled={!spotDetail.isAbleToPark}
                 onPress={() => handleStartParking()}
               />
-              {!spotDetail.isAbleToPark ? (
+              <CarSelect
+                selectedCarId={selectedCarId}
+                setSelectedCarId={setSelectedCarId}
+              />
+              {!spotDetail.isAbleToPark && (
                 <View
                   style={{
                     marginVertical: 10,
@@ -260,13 +278,6 @@ export const Map = ({ navigation }: Props) => {
                       alignSelf: "center",
                       marginVertical: 10,
                     }}
-                  />
-                </View>
-              ) : (
-                <View>
-                  <CarSelect
-                    selectedCarId={selectedCarId}
-                    setSelectedCarId={setSelectedCarId}
                   />
                 </View>
               )}

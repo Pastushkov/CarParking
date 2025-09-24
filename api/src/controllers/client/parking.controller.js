@@ -3,7 +3,9 @@ const ParkingSession = require("../../models/parkingSession");
 const Parking = require("../../models/parking");
 const Tariff = require("../../models/tariff");
 const Client = require("../../models/client");
+const Booking = require("../../models/booking");
 const Transactions = require("../../models/transactions");
+const stopperController = require("../../controllers/client/stopper.controller");
 
 const findNearestParking = async (req, res) => {
   const { longitude, latitude } = req.body;
@@ -50,12 +52,8 @@ const findNearestParking = async (req, res) => {
   });
 };
 
-const startParking = async (req, res) => {
-  const { id: clientId } = req.user; // ID користувача
-  const { parkingId, carId } = req.body;
-
+const newParking = async ({ clientId, parkingId, carId }) => {
   try {
-    // Перевірити, чи існує активна сесія для цього клієнта
     const activeSession = await ParkingSession.findOne({
       clientId,
       carId,
@@ -63,10 +61,10 @@ const startParking = async (req, res) => {
     });
 
     if (activeSession) {
-      return res.status(400).json({
-        ok: false,
+      return {
+        status: 400,
         message: "You already have an active parking session.",
-      });
+      };
     }
 
     // Створити нову сесію
@@ -75,19 +73,30 @@ const startParking = async (req, res) => {
       parkingId,
       carId,
     });
-
-    return res.status(200).json({
-      ok: true,
+    return {
+      status: 200,
       message: "Parking session started.",
       payload: session,
-    });
+    };
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
-      ok: false,
-      message: "Something went wrong.",
-    });
+    return { status: 500, message: "Something went wrong.", error };
   }
+};
+
+const startParking = async (req, res) => {
+  const { id: clientId } = req.user; // ID користувача
+  const { parkingId, carId } = req.body;
+  const { status, message, payload, error } = await newParking({
+    clientId,
+    parkingId,
+    carId,
+  });
+  return res.status(status).json({
+    message,
+    payload,
+    error,
+  });
 };
 
 const endParking = async (req, res) => {
@@ -149,6 +158,31 @@ const endParking = async (req, res) => {
       status: "completed",
     });
 
+    const booking = await Booking.findOne({
+      paringSessionId: session._id,
+    });
+
+    if (booking) {
+      try {
+        await Booking.updateOne(
+          {
+            _id: booking._id,
+          },
+          {
+            status: "end",
+          }
+        );
+      } catch (error) {
+        console.error("error update booking", error);
+      }
+    } else {
+      console.error("Bookign not found", session);
+    }
+
+    setTimeout(() => {
+      stopperController.userOnPlace("on");
+    }, 3000);
+
     return res.status(200).json({
       ok: true,
       message: "Parking session ended.",
@@ -166,4 +200,111 @@ const endParking = async (req, res) => {
   }
 };
 
-module.exports = { findNearestParking, startParking, endParking };
+const bookPlace = async (req, res) => {
+  const { id: clientId } = req.user; // ID користувача
+  const { parkingId, carId } = req.body;
+  const { status, message, payload, error } = await newParking({
+    clientId,
+    parkingId,
+    carId,
+  });
+
+  if (status !== 200) {
+    return res.status(status).json({
+      message,
+      payload,
+      error,
+    });
+  }
+  let newBooking = null;
+
+  try {
+    newBooking = await Booking.create({
+      clientId,
+      paringSessionId: payload._id,
+      status: "new",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error,
+      message: "Error create booking",
+    });
+  }
+
+  return res.status(200).json({
+    message: "Place booked successfully",
+    payload: newBooking,
+  });
+};
+
+const getUserBooking = async (req, res) => {
+  const { id: clientId } = req.user;
+  try {
+    const bookings = await Booking.find({
+      clientId,
+    });
+    return res.status(200).json({
+      ok: true,
+      payload: bookings,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      ok: false,
+      message: "Something went wrong.",
+      error,
+    });
+  }
+};
+
+const bookOnPlace = async (req, res) => {
+  const { id: clientId } = req.user;
+  let booking = null;
+  try {
+    booking = await Booking.findOne({
+      clientId,
+      status: "new",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error,
+      message: "Error bookOnPlace",
+    });
+  }
+  if (!booking) {
+    return res.status(404).json({
+      message: "Booking not found",
+    });
+  }
+
+  try {
+    booking = await Booking.updateOne(
+      { _id: booking._id },
+      {
+        status: "on_place",
+      }
+    );
+  } catch (error) {
+    return res.status(500).json({
+      error,
+      message: "Error update booking status",
+    });
+  }
+  setTimeout(() => {
+    stopperController.userOnPlace("off");
+  }, 3000);
+
+  return res.status(200).json({
+    ok: true,
+    message: "Stopper goes down!",
+  });
+};
+
+module.exports = {
+  findNearestParking,
+  startParking,
+  endParking,
+  bookPlace,
+  getUserBooking,
+  bookOnPlace,
+};

@@ -205,15 +205,13 @@ const off = async (req, res) => {
   }
 };
 
-const execute4Line = async (req, res) => {
+const userOnPlace = async (status) => {
   const channels = {
     channel1: "light.chanel_1",
     channel2: "light.chanel_2",
     channel3: "light.chanel_3",
     channel4: "light.chanel_4",
   };
-
-  const { status } = req.query;
 
   let turnOnChannels = [];
   let turnOffChannels = [];
@@ -225,11 +223,10 @@ const execute4Line = async (req, res) => {
     turnOnChannels = [channels.channel2, channels.channel4];
     turnOffChannels = [channels.channel1, channels.channel3];
   } else {
-    return res.status(400).json({
-      ok: false,
+    return {
+      status: 400,
       message: "Wrong status",
-      status,
-    });
+    };
   }
 
   try {
@@ -249,65 +246,31 @@ const execute4Line = async (req, res) => {
         },
         { headers }
       );
-    }, 1500);
-    return res
-      .status(200)
-      .json({ ok: true, message: `Chanels ${turnOnChannels}` });
+    }, 1300);
+    return {
+      status: 200,
+      message: `Chanels ${turnOnChannels}`,
+    };
   } catch (error) {
     console.error("Помилка при керуванні реле:", error.message);
     if (error.response) {
       console.error("Деталі помилки:", error.response.data);
     }
-    return res.status(500).json({
-      ok: false,
+    return {
+      status: 500,
+      error,
       message: `Помилка при керуванні реле: ${error.message}`,
-    });
+    };
   }
-
-  /*
-  try {
-    const response = await axios.post(
-      url,
-      {
-        entity_id: entityId,
-      },
-      { headers }
-    );
-    if (response.status === 200) {
-      setTimeout(async () => {
-        await axios.post(
-          `${homeAssistantUrl}/services/light/turn_on`,
-          {
-            entity_id: entityId,
-          },
-          { headers }
-        );
-      }, 1800);
-    }
-    return res.status(200).json({
-      ok: true,
-      payload: {
-        data: response.data,
-      },
-      message: `Команда '${service}' виконана успішно:, ${response.data}`,
-    });
-  } catch (error) {
-    let errorMessage = "";
-    if (error.response) {
-      errorMessage = `Помилка: ${error.response.status} - ${error.response.statusText}`;
-      console.error(
-        `Помилка: ${error.response.status} - ${error.response.data.message}`
-      );
-    } else {
-      errorMessage = `Помилка при керуванні реле: ${error.message}`;
-      console.error("", error.message);
-    }
-    return res.status(500).json({
-      ok: false,
-      message: errorMessage,
-      url,
-    });
-  }*/
 };
 
-module.exports = { status, execute, on, off, execute4Line };
+const execute4Line = async (req, res) => {
+  const { status } = req.query;
+  const { status: fstatus, message, error } = await userOnPlace(status);
+  return res.status(fstatus).json({
+    message,
+    error,
+  });
+};
+
+module.exports = { status, execute, on, off, execute4Line, userOnPlace };

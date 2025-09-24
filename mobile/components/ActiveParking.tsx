@@ -43,6 +43,15 @@ export const ActiveParking = ({ onEnd }: Props) => {
     return () => clearInterval(interval); // Очищення таймера
   }, [rootState.parkingSession?.startParkingDate]);
 
+  const handleIamOnPlace = async () => {
+    try {
+      await ParkingService.bookOnPlace();
+      await rootState.fetchMe();
+    } catch (error) {
+      console.error("Error book on place", JSON.stringify(error));
+    }
+  };
+
   return (
     <View
       style={{
@@ -64,6 +73,14 @@ export const ActiveParking = ({ onEnd }: Props) => {
           <Text>{rootState?.parkingSession?.carId?.plate}</Text>
         </View>
       </View>
+
+      {rootState.parkingSession.booking &&
+        rootState.parkingSession.booking.status === "new" && (
+          <View>
+            <Button title="I'm on place" onPress={handleIamOnPlace} />
+          </View>
+        )}
+
       <View
         style={{
           marginTop: 20,

@@ -2,6 +2,7 @@ const Client = require("../../models/client");
 const Transactions = require("../../models/transactions");
 const ParkingSessions = require("../../models/parkingSession");
 const Tariff = require("../../models/tariff");
+const Booking = require("../../models/booking");
 
 const getInfo = async (req, res) => {
   const { id } = req.user;
@@ -46,6 +47,7 @@ const getInfo = async (req, res) => {
   }
 
   let tariff;
+  let booking;
   if (parkingSession) {
     try {
       tariff = await Tariff.findById(parkingSession.parkingId.tariffId);
@@ -57,6 +59,19 @@ const getInfo = async (req, res) => {
         error,
       });
     }
+    try {
+      booking = await Booking.findOne({
+        clientId: id,
+        status: "new",
+      });
+    } catch (error) {
+      console.log("GET Booking: ", error);
+      return res.status(500).json({
+        ok: false,
+        message: "Error while get tbooking",
+        error,
+      });
+    }
   }
   return res.status(200).json({
     ok: true,
@@ -65,6 +80,7 @@ const getInfo = async (req, res) => {
       parkingSession: parkingSession && {
         ...parkingSession?.toJSON(),
         tariff,
+        booking,
       },
     },
   });
