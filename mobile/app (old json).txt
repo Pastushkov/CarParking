@@ -14,7 +14,7 @@
     "ios": {
       "supportsTablet": true,
       "config": {
-        "googleMapsApiKey": "AIzaSyCA2qHgWj9kq7886MrRQf0DPPuL8xxZ1Y4"
+        "googleMapsApiKey": "AI..."
       }
     },
     "android": {
@@ -28,7 +28,7 @@
       ],
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyCA2qHgWj9kq7886MrRQf0DPPuL8xxZ1Y4"
+          "apiKey": "AI...."
         }
       },
       "package": "com.parkonspot"
