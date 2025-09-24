@@ -10,6 +10,6 @@ router.use("/auth", authRoutes);
 router.use("/client", clientAuthMiddleware, clientRoutes);
 router.use("/parking", clientAuthMiddleware, parkingRoutes);
 router.use("/cars", clientAuthMiddleware, carRoutes);
-router.use("/stopper", stopperRoutes);
+router.use("/stopper", clientAuthMiddleware, stopperRoutes);
 
 module.exports = router;

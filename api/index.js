@@ -12,6 +12,15 @@ app.use(express.json());
 
 app.use((req, res, next) => {
   console.log(`Request: ${req.method} ${req.url} Payload:`, req.body);
+  const originalJson = res.json;
+
+  // 3. Перевизначаємо res.json, щоб логувати дані
+  res.json = function (body) {
+    console.log("Response payload:", body);
+    // 4. Викликаємо оригінальний метод, щоб відправити реальну відповідь
+    originalJson.call(this, body);
+  };
+
   next();
 });
 

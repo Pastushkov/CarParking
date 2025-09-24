@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import storageService from "./storageService";
 // import { API_HOST } from "@env";
-const API_HOST = "http://192.168.8.3:5000/v1/client";
+const API_HOST = "http://192.168.1.2:5000/v1/client";
 console.log(API_HOST);
 
 export const api = axios.create({

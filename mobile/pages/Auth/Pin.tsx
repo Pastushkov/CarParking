@@ -97,6 +97,7 @@ export const Pin = ({ navigation, route }: Props) => {
             onChangeText={field.onChange}
             maxLength={4}
             keyboardType="numeric"
+            secureTextEntry
           />
         )}
       />

@@ -72,7 +72,6 @@ export const Map = ({ navigation }: Props) => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("error");
-
         return;
       }
       const currentLocation = await Location.getCurrentPositionAsync({
@@ -136,9 +135,19 @@ export const Map = ({ navigation }: Props) => {
     }
   };
 
+  const handleBookPlace = async () => {
+    console.log(spotDetail);
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <MapView
+        onMapReady={() => {
+          console.log("Map is ready!");
+        }}
+        onMapLoaded={() => {
+          console.log("Map loaded successfully!");
+        }}
         ref={mapRef}
         style={{ width: "100%", height: "100%" }}
         initialRegion={{
@@ -222,6 +231,7 @@ export const Map = ({ navigation }: Props) => {
                 padding: 20,
               }}
             >
+              <Button title="Book place" onPress={() => handleBookPlace()} />
               <Button
                 title="Park"
                 disabled={!spotDetail.isAbleToPark}

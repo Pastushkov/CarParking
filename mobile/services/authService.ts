@@ -53,7 +53,7 @@ export const verifySms = async (values: any) => {
   try {
     const { data } = await api.post("/auth/verify-sms", values);
     return data.ok;
-  } catch (error) {    
+  } catch (error) {
     console.log(JSON.stringify(error));
     return undefined;
   }

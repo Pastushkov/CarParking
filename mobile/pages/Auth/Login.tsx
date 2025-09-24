@@ -25,6 +25,7 @@ export const Login = ({ navigation }: Props) => {
     control,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<FormInputs>({
     mode: "onSubmit",
     defaultValues: {
@@ -62,7 +63,6 @@ export const Login = ({ navigation }: Props) => {
 
   const submit = async (values: FormInputs) => {
     setLoading(true);
-
     setRootState((state: any) => ({
       ...state,
       auth: {
@@ -70,6 +70,13 @@ export const Login = ({ navigation }: Props) => {
       },
     }));
     const res = await findUser(values);
+    if (res === "Error") {
+      setError("phone", {
+        message: "something wrong. Try again",
+      });
+      setLoading(false);
+      return;
+    }
     if (res.processLogin) {
       navigation.navigate("Pin", { createPin: false });
     } else {

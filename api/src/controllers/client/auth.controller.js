@@ -135,7 +135,7 @@ const verifySms = async (req, res) => {
       message: "Phone number and code required",
     });
   }
- 
+
   const success = await smsService.verifySms(phone, code);
 
   if (success) {

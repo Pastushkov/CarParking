@@ -12,7 +12,10 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyCA2qHgWj9kq7886MrRQf0DPPuL8xxZ1Y4"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +25,13 @@
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
-      ]
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCA2qHgWj9kq7886MrRQf0DPPuL8xxZ1Y4"
+        }
+      },
+      "package": "com.parkonspot"
     },
     "web": {
       "favicon": "./assets/favicon.png"
